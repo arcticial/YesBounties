@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -28,9 +30,10 @@ jobs:
       - name: Rename jar
         run: mv target/NotBounties-*.jar target/notbounties-but-cooler.jar
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: notbounties-but-cooler
-          path: target/notbounties-but-cooler.jar
-          if-no-files-found: error
+          tag_name: build-${{ github.run_number }}
+          name: Build ${{ github.run_number }}
+          files: target/notbounties-but-cooler.jar
+          generate_release_notes: true
